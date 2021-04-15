@@ -161,7 +161,7 @@ class CmdCat : public Command {
 public:
     explicit CmdCat(Shell &holder)
         : Command("cat", "ct", "Concatenate FILE(s) to standard output", holder) {}
-    
+
     int execute() override {
         const std::string &filename = arguments.back();
         std::ifstream file(filename);
@@ -179,17 +179,45 @@ public:
     };
 };
 
+class CmdTouch : public Command {
+public:
+    explicit CmdTouch(Shell &holder)
+        : Command("touch", "tc", "Create a file", holder) {}
+
+    int execute() override {
+        if(arguments.size() < 2) {
+            holder.print("[TOUCH] Wrong arguments");
+            return -1;
+        }
+
+        std::ofstream newfile;
+        newfile.exceptions(std::ios::badbit | std::ios::failbit);
+        try {
+            const std::string &filename = arguments.at(1);
+            newfile.open(filename);
+            newfile.close();
+            return 0;
+        } catch(std::fstream::failure &err) {
+            holder.print(std::string("[TOUCH] Error: ") + err.what());
+            return err.code().value();
+        } catch(...) {
+            return -2;
+        }
+    }
+};
+
 //= == == == == == == == == == == == == = Generators = == == == == == == == == == == == == ==//
 
 CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
     switch(type) {
-        case CommandType::Exit: return CommandPtr(new CmdExit(holder));
-        case CommandType::Help: return CommandPtr(new CmdHelp(holder));
-        case CommandType::Echo: return CommandPtr(new CmdEcho(holder));
-        case CommandType::Ls  : return CommandPtr(new CmdLs(holder));
-        case CommandType::Cd  : return CommandPtr(new CmdCd(holder));
-        case CommandType::Pwd : return CommandPtr(new CmdPwd(holder));
-        case CommandType::Cat : return CommandPtr(new CmdCat(holder));
+        case CommandType::Exit : return CommandPtr(new CmdExit(holder));
+        case CommandType::Help : return CommandPtr(new CmdHelp(holder));
+        case CommandType::Echo : return CommandPtr(new CmdEcho(holder));
+        case CommandType::Ls   : return CommandPtr(new CmdLs(holder));
+        case CommandType::Cd   : return CommandPtr(new CmdCd(holder));
+        case CommandType::Pwd  : return CommandPtr(new CmdPwd(holder));
+        case CommandType::Cat  : return CommandPtr(new CmdCat(holder));
+        case CommandType::Touch: return CommandPtr(new CmdTouch(holder));
     }
     return nullptr;
 }

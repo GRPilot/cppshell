@@ -13,5 +13,6 @@ int main() {
     shell.addCommand(env::CommandGenerator::gen(env::CommandType::Cd, shell));
     shell.addCommand(env::CommandGenerator::gen(env::CommandType::Pwd, shell));
     shell.addCommand(env::CommandGenerator::gen(env::CommandType::Cat, shell));
+    shell.addCommand(env::CommandGenerator::gen(env::CommandType::Touch, shell));
     return shell.start();
 }

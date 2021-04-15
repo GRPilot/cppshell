@@ -11,11 +11,7 @@ class Shell;
 
 /**
  * @todo:
- * [*] ls;
- * [*] cd;
- * [*] pwd;
- * [*] cat;
- * [ ] touch;
+ * [*] touch;
  * [ ] chmod;
  * [ ] whoami;
  */
@@ -28,6 +24,7 @@ enum class CommandType {
     Cd,
     Pwd,
     Cat,
+    Touch,
 };
 
 class CommandGenerator {
