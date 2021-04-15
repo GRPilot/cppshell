@@ -34,7 +34,7 @@ public:
             ss << info.description << std::endl;
         }
         ss.clear();
-        holder.print(ss.str());
+        holder.print(ss.str(), false);
         return 0;
     }
 };
@@ -115,16 +115,19 @@ private:
     int ls(const ParsedArguments &args) const {
         namespace fs = std::filesystem;
         try {
+            std::stringstream out;
+            out << std::endl;
             auto found = std::find(args.params.begin(), args.params.end(), ParsedArguments::recursive);
             if(found == args.params.end()) {
                 for(const auto &entry : fs::directory_iterator(args.path)) {
-                    holder.print(entry.path());
+                    out << entry.path() << std::endl;
                 }
             } else {
                 for(const auto &entry : fs::recursive_directory_iterator(args.path)) {
-                    holder.print(entry.path());
+                    out << entry.path() << std::endl;
                 }
             }
+            holder.print(out.str(), false);
         } catch(fs::filesystem_error &err) {
             holder.print(std::string("[LS] Error: ").append(err.what()));
             return err.code().value();

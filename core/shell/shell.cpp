@@ -32,8 +32,8 @@ int Shell::start() const {
     } while(true);
 }
 
-void Shell::print(const std::string &str) const {
-    std::cout << "[Shell] " << str << std::endl;
+void Shell::print(const std::string &str, bool printShell) const {
+    std::cout << (printShell ? "[Shell] " : "") << str << std::endl;
 }
 
 const std::vector<CommandPtr> &Shell::getCommands() const {

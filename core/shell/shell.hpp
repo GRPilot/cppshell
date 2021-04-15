@@ -15,7 +15,7 @@ public:
 
     int start() const;
 
-    void print(const std::string &str) const;
+    void print(const std::string &str, bool printShell = true) const;
 
     const std::vector<CommandPtr> &getCommands() const;
 private:
