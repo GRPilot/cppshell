@@ -11,7 +11,6 @@ class Shell;
 
 /**
  * @todo:
- * [*] touch;
  * [ ] chmod;
  * [ ] whoami;
  */
@@ -25,6 +24,7 @@ enum class CommandType {
     Pwd,
     Cat,
     Touch,
+    Remove,
 };
 
 class CommandGenerator {

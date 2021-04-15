@@ -206,18 +206,61 @@ public:
     }
 };
 
+class CmdRemove : public Command {
+public:
+    explicit CmdRemove(Shell &holder)
+        : Command("rm", "", "Remove file of folder", holder) {}
+
+    int execute() override {
+        if(arguments.size() < 2) {
+            holder.print("[RM] Wrong arguments");
+            return -1;
+        }
+        if(arguments[1] != "-r") {
+            return remove(arguments[1]);
+        }
+        if(arguments.size() < 3) {
+            holder.print("[RM] Wrong arguments");
+            return -2;
+        }
+        return removeRecursive(arguments[2]);
+    }
+private:
+    int remove(const std::string &path) try {
+        if(std::filesystem::remove(path)) {
+            return 0;
+        }
+        return -1;
+    } catch(std::filesystem::filesystem_error &err) {
+        holder.print(std::string("[RM] Error: ") + err.what());
+        holder.print(std::string("[RM] Use -r for directories"));
+        return err.code().value();
+    }
+
+    int removeRecursive(const std::string &path) try {
+        if(std::filesystem::remove_all(path)) {
+            return 0;
+        }
+        return -1;
+    } catch(std::filesystem::filesystem_error &err) {
+        holder.print(std::string("[RM] Error: ") + err.what());
+        return err.code().value();
+    }
+};
+
 //= == == == == == == == == == == == == = Generators = == == == == == == == == == == == == ==//
 
 CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
     switch(type) {
-        case CommandType::Exit : return CommandPtr(new CmdExit(holder));
-        case CommandType::Help : return CommandPtr(new CmdHelp(holder));
-        case CommandType::Echo : return CommandPtr(new CmdEcho(holder));
-        case CommandType::Ls   : return CommandPtr(new CmdLs(holder));
-        case CommandType::Cd   : return CommandPtr(new CmdCd(holder));
-        case CommandType::Pwd  : return CommandPtr(new CmdPwd(holder));
-        case CommandType::Cat  : return CommandPtr(new CmdCat(holder));
-        case CommandType::Touch: return CommandPtr(new CmdTouch(holder));
+        case CommandType::Exit  : return CommandPtr(new CmdExit(holder));
+        case CommandType::Help  : return CommandPtr(new CmdHelp(holder));
+        case CommandType::Echo  : return CommandPtr(new CmdEcho(holder));
+        case CommandType::Ls    : return CommandPtr(new CmdLs(holder));
+        case CommandType::Cd    : return CommandPtr(new CmdCd(holder));
+        case CommandType::Pwd   : return CommandPtr(new CmdPwd(holder));
+        case CommandType::Cat   : return CommandPtr(new CmdCat(holder));
+        case CommandType::Touch : return CommandPtr(new CmdTouch(holder));
+        case CommandType::Remove: return CommandPtr(new CmdRemove(holder));
     }
     return nullptr;
 }
