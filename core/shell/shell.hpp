@@ -22,6 +22,7 @@ private:
     std::vector<CommandPtr> commands;
 
     CommandPtr find_cmd(const std::string &cmd) const;
+    void printErr(const std::string &cmdname, int rc) const;
 };
 
 } // namespace env

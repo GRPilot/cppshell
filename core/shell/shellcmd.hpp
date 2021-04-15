@@ -19,8 +19,10 @@ public:
 
     virtual CmdInfo info() const;
     virtual int execute() = 0;
+    virtual int setArgs(const std::string &args);
 protected:
     CmdInfo information;
+    std::vector<std::string> arguments;
 };
 
 } // namespace env

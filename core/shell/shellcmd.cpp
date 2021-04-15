@@ -1,4 +1,5 @@
 #include "deps.hpp"
+#include "core.hpp"
 
 #include "shellcmd.hpp"
 
@@ -25,6 +26,14 @@ bool Command::operator==(const std::string &other) {
 
 CmdInfo Command::info() const {
     return information;
+}
+
+int Command::setArgs(const std::string &args) {
+    if(args.empty()) {
+        return -1;
+    }
+    arguments = core::split(args, ' ');
+    return 0;
 }
 
 } // namespace env
