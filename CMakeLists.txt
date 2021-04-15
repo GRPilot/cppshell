@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 1.13)
 
 project(shell)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(root ${PROJECT_SOURCE_DIR})
 
 include_directories(
