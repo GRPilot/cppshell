@@ -43,16 +43,6 @@ public:
     }
 };
 
-class CmdHelloWorld : public Command {
-public:
-    CmdHelloWorld() : Command("hello_world", "hw", "Print string 'Hello world' into console") {}
-
-    int execute() override {
-        printf("Hello world!\n");
-        return 0;
-    }
-};
-
 class CmdEcho : public Command {
 public:
     CmdEcho(Shell &shell)
@@ -82,11 +72,69 @@ private:
     std::string params;
 };
 
+class CmdLs : public Command {
+    struct ParsedArguments {
+        enum params {
+            recursive,
+        };
+        std::string path = ".";
+        std::vector<params> params;
+        explicit ParsedArguments(const std::vector<std::string> &args) {
+            if(args.empty()) {
+                return;
+            }
+            for(const auto &a : args) {
+                std::size_t npos = std::string::npos;
+                if(a.find("-r") != npos) {
+                    params.push_back(recursive);
+                }
+                if(a.find('/') != npos || a.find('.') != npos) {
+                    path = a;
+                    if(path.back() != '/') {
+                        path += '/';
+                    }
+                }
+            }
+        }
+    };
+public:
+    explicit CmdLs(Shell &holder)
+        : Command("ls", "l", "List information about the FILEs (the current directory by default)"),
+          holder(holder) {
+    }
+
+    int execute() override {
+        printf("logi: arguments size: %zd\n", arguments.size());
+        ParsedArguments args(arguments);
+        return ls(args);
+    }
+
+private:
+    Shell &holder;
+    int ls(const ParsedArguments &args) const {
+        namespace fs = std::filesystem;
+        try {
+            auto found = std::find(args.params.begin(), args.params.end(), ParsedArguments::recursive);
+            if(found == args.params.end()) {
+                for(const auto &entry : fs::directory_iterator(args.path)) {
+                    holder.print(entry.path());
+                }
+            } else {
+                for(const auto &entry : fs::recursive_directory_iterator(args.path)) {
+                    holder.print(entry.path());
+                }
+            }
+        } catch(fs::filesystem_error &err) {
+            holder.print(std::string("[LS] Error: ").append(err.what()));
+            return err.code().value();
+        }
+        return 0;
+    }
+};
 
 CommandPtr CommandGenerator::gen(CommandType type) {
     switch(type) {
         case CommandType::Exit: return CommandPtr(new CmdExit);
-        case CommandType::HelloWorld: return CommandPtr(new CmdHelloWorld);
     }
     return nullptr;
 }
@@ -95,6 +143,7 @@ CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
     switch(type) {
         case CommandType::Help: return CommandPtr(new CmdHelp(holder));
         case CommandType::Echo: return CommandPtr(new CmdEcho(holder));
+        case CommandType::Ls  : return CommandPtr(new CmdLs(holder));
     }
     return nullptr;
 }

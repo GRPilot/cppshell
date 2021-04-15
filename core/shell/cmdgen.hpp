@@ -9,11 +9,22 @@ using CommandPtr = std::shared_ptr<Command>;
 }
 class Shell;
 
+/**
+ * @todo:
+ * [*] ls;
+ * [ ] cd;
+ * [ ] touch;
+ * [ ] cat;
+ * [ ] chmod;
+ * [ ] whoami;
+ * [ ] pwd;
+ */
+
 enum class CommandType {
     Help,
-    HelloWorld,
     Exit,
     Echo,
+    Ls,
 };
 
 class CommandGenerator {
