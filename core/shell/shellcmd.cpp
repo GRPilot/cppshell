@@ -2,13 +2,14 @@
 #include "core.hpp"
 
 #include "shellcmd.hpp"
+#include "shell.hpp"
 
 namespace env {
 
 Command::Command(const std::string &name,
                  const std::string &shortcut,
-                 const std::string &description)
-    : information{name, shortcut, description} {
+                 const std::string &description, Shell &holder)
+    : information{name, shortcut, description}, holder(holder) {
 }
 
 bool Command::operator==(const std::string &other) {

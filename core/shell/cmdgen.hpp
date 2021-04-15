@@ -30,7 +30,6 @@ enum class CommandType {
 
 class CommandGenerator {
 public:
-    static CommandPtr gen(CommandType type);
     static CommandPtr gen(CommandType type, Shell &holder);
 };
 

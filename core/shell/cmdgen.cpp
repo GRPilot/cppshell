@@ -8,7 +8,7 @@ namespace env {
 
 class CmdHelp : public Command {
 public:
-    CmdHelp(Shell &shell) : Command("help", "h", "Show all commands"), holder(shell) {}
+    CmdHelp(Shell &shell) : Command("help", "h", "Show all commands", shell) {}
     int execute() override {
         const std::vector<std::shared_ptr<Command>> &commands = holder.getCommands();
         if(commands.empty()) {
@@ -30,13 +30,11 @@ public:
         holder.print(ss.str());
         return 0;
     }
-private:
-    Shell &holder;
 };
 
 class CmdExit : public Command {
 public:
-    CmdExit() : Command("exit", "e", "Exit shell") {}
+    CmdExit(Shell &holder) : Command("exit", "e", "Exit shell", holder) {}
     int execute() override {
         exit(0);
         return 0;
@@ -45,8 +43,7 @@ public:
 
 class CmdEcho : public Command {
 public:
-    CmdEcho(Shell &shell)
-        : Command("echo", "", "Just echo. Nothing more, but a lil less"), holder(shell) {}
+    CmdEcho(Shell &shell) : Command("echo", "", "Just echo. Nothing more, but a lil less", shell) {}
     int execute() override {
         holder.print(params);
         params.clear();
@@ -68,7 +65,6 @@ public:
         return true;
     }
 private:
-    Shell &holder;
     std::string params;
 };
 
@@ -99,8 +95,8 @@ class CmdLs : public Command {
     };
 public:
     explicit CmdLs(Shell &holder)
-        : Command("ls", "l", "List information about the FILEs (the current directory by default)"),
-          holder(holder) {
+        : Command("ls", "l", "List information about the FILEs (the current directory by default)",
+                  holder) {
     }
 
     int execute() override {
@@ -110,7 +106,6 @@ public:
     }
 
 private:
-    Shell &holder;
     int ls(const ParsedArguments &args) const {
         namespace fs = std::filesystem;
         try {
@@ -134,7 +129,7 @@ private:
 
 class CmdCd : public Command {
 public:
-    explicit CmdCd(Shell &holder) : Command("cd", "", "Change dirrectory"), holder(holder) {}
+    explicit CmdCd(Shell &holder) : Command("cd", "", "Change dirrectory", holder) {}
 
     int execute() override try {
         const std::string_view path = arguments.back();
@@ -147,22 +142,14 @@ public:
         holder.print(std::string("[CD] ").append(err.what()));
         return err.code().value();
     }
-
-private:
-    Shell &holder;
 };
+
 
 //= == == == == == == == == == == == == = Generators = == == == == == == == == == == == == ==//
 
-CommandPtr CommandGenerator::gen(CommandType type) {
-    switch(type) {
-        case CommandType::Exit: return CommandPtr(new CmdExit);
-    }
-    return nullptr;
-}
-
 CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
     switch(type) {
+        case CommandType::Exit: return CommandPtr(new CmdExit(holder));
         case CommandType::Help: return CommandPtr(new CmdHelp(holder));
         case CommandType::Echo: return CommandPtr(new CmdEcho(holder));
         case CommandType::Ls  : return CommandPtr(new CmdLs(holder));
