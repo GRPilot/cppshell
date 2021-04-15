@@ -15,13 +15,14 @@ public:
 
     int start() const;
 
-    void print(const std::string &str) const;
+    void print(const std::string &str, bool printShell = true) const;
 
     const std::vector<CommandPtr> &getCommands() const;
 private:
     std::vector<CommandPtr> commands;
 
     CommandPtr find_cmd(const std::string &cmd) const;
+    void printErr(const std::string &cmdname, int rc) const;
 };
 
 } // namespace env

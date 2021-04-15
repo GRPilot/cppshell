@@ -9,18 +9,24 @@ struct CmdInfo {
     std::string description;
 };
 
+class Shell;
+
 class Command {
 public:
     explicit Command(const std::string &name,
                      const std::string &shortcut,
-                     const std::string &description);
+                     const std::string &description,
+                     Shell &holder);
 
     virtual bool operator==(const std::string &other);
 
     virtual CmdInfo info() const;
     virtual int execute() = 0;
+    virtual int setArgs(const std::string &args);
 protected:
     CmdInfo information;
+    std::vector<std::string> arguments;
+    Shell &holder;
 };
 
 } // namespace env

@@ -7,7 +7,10 @@
 #include <memory>
 #include <bitset>
 #include <sstream>
+#include <fstream>
 #include <memory>
 #include <iostream>
+#include <algorithm>
+#include <filesystem>
 
 #endif // __DEPS_H__
