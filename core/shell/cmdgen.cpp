@@ -157,6 +157,27 @@ public:
     }
 };
 
+class CmdCat : public Command {
+public:
+    explicit CmdCat(Shell &holder)
+        : Command("cat", "ct", "Concatenate FILE(s) to standard output", holder) {}
+    
+    int execute() override {
+        const std::string &filename = arguments.back();
+        std::ifstream file(filename);
+        if(!file.good()) {
+            holder.print("[CAT] Error: the argument is not a filename");
+            return -1;
+        }
+        std::stringstream content;
+        constexpr size_t LINE_SIZE = 60;
+        content << std::endl << std::string(LINE_SIZE, '-') << std::endl
+                << file.rdbuf()
+                << std::endl << std::string(LINE_SIZE, '-');
+        holder.print(content.str());
+        return 0;
+    };
+};
 
 //= == == == == == == == == == == == == = Generators = == == == == == == == == == == == == ==//
 
@@ -168,6 +189,7 @@ CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
         case CommandType::Ls  : return CommandPtr(new CmdLs(holder));
         case CommandType::Cd  : return CommandPtr(new CmdCd(holder));
         case CommandType::Pwd : return CommandPtr(new CmdPwd(holder));
+        case CommandType::Cat : return CommandPtr(new CmdCat(holder));
     }
     return nullptr;
 }

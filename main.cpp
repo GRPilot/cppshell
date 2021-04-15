@@ -12,5 +12,6 @@ int main() {
     shell.addCommand(env::CommandGenerator::gen(env::CommandType::Ls, shell));
     shell.addCommand(env::CommandGenerator::gen(env::CommandType::Cd, shell));
     shell.addCommand(env::CommandGenerator::gen(env::CommandType::Pwd, shell));
+    shell.addCommand(env::CommandGenerator::gen(env::CommandType::Cat, shell));
     return shell.start();
 }
