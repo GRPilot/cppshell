@@ -15,12 +15,14 @@ include_directories(
 )
 
 set(sources
+    ${root}/core/core.cpp
     ${root}/core/shell/shell.cpp
     ${root}/core/shell/shellcmd.cpp
     ${root}/core/shell/cmdgen.cpp
     ${root}/main.cpp
 )
 set(headers
+    ${root}/core/core.hpp
     ${root}/core/shell/shell.hpp
     ${root}/core/shell/shellcmd.hpp
     ${root}/core/shell/cmdgen.hpp
