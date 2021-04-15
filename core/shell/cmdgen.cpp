@@ -100,7 +100,6 @@ public:
     }
 
     int execute() override {
-        printf("logi: arguments size: %zd\n", arguments.size());
         ParsedArguments args(arguments);
         return ls(args);
     }
@@ -144,6 +143,20 @@ public:
     }
 };
 
+class CmdPwd : public Command {
+public:
+    explicit CmdPwd(Shell &holder)
+        : Command("pwd", "", "Show the current working directory", holder) {}
+
+    int execute() override try {
+        holder.print(std::string("[PWD] ").append(std::filesystem::current_path()));
+        return 0;
+    } catch(std::filesystem::filesystem_error &err) {
+        holder.print(std::string("[PWD] ").append(err.what()));
+        return err.code().value();
+    }
+};
+
 
 //= == == == == == == == == == == == == = Generators = == == == == == == == == == == == == ==//
 
@@ -154,6 +167,7 @@ CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
         case CommandType::Echo: return CommandPtr(new CmdEcho(holder));
         case CommandType::Ls  : return CommandPtr(new CmdLs(holder));
         case CommandType::Cd  : return CommandPtr(new CmdCd(holder));
+        case CommandType::Pwd : return CommandPtr(new CmdPwd(holder));
     }
     return nullptr;
 }
