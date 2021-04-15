@@ -16,17 +16,24 @@ public:
             return -1;
         }
         std::stringstream ss;
+        ss.setf(std::ios::left);
         ss << "Commands:" << std::endl;
+
+        ss.width(sizeof("Command: "));
+        ss << "Command: ";
+        ss.width(sizeof("Shortcut:"));
+        ss << "Shortcut:";
+        ss << "Description:" << std::endl;
         for(const std::shared_ptr<Command> &cmd : commands) {
             CmdInfo info = cmd->info();
             std::cout << " ";
-            ss.width(5);
-            ss.setf(std::ios::left);
-            ss << info.shortcut;
-            ss.width(10);
-            ss << info.name << "  - ";
+            ss.width(sizeof("Command: "));
+            ss << info.name;
+            ss.width(sizeof("Shortcut:"));
+            ss << info.shortcut << "- ";
             ss << info.description << std::endl;
         }
+        ss.clear();
         holder.print(ss.str());
         return 0;
     }
