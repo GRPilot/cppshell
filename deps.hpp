@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <memory>
+#include <bitset>
 #include <sstream>
 #include <memory>
 #include <iostream>
