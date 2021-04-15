@@ -132,6 +132,28 @@ private:
     }
 };
 
+class CmdCd : public Command {
+public:
+    explicit CmdCd(Shell &holder) : Command("cd", "", "Change dirrectory"), holder(holder) {}
+
+    int execute() override try {
+        const std::string_view path = arguments.back();
+        if(!std::filesystem::is_directory(path)) {
+            holder.print("[CD] Error: the path is not a directory");
+        }
+        std::filesystem::current_path(path);
+        return 0;
+    } catch(std::filesystem::filesystem_error &err) {
+        holder.print(std::string("[CD] ").append(err.what()));
+        return err.code().value();
+    }
+
+private:
+    Shell &holder;
+};
+
+//= == == == == == == == == == == == == = Generators = == == == == == == == == == == == == ==//
+
 CommandPtr CommandGenerator::gen(CommandType type) {
     switch(type) {
         case CommandType::Exit: return CommandPtr(new CmdExit);
@@ -144,6 +166,7 @@ CommandPtr CommandGenerator::gen(CommandType type, Shell &holder) {
         case CommandType::Help: return CommandPtr(new CmdHelp(holder));
         case CommandType::Echo: return CommandPtr(new CmdEcho(holder));
         case CommandType::Ls  : return CommandPtr(new CmdLs(holder));
+        case CommandType::Cd  : return CommandPtr(new CmdCd(holder));
     }
     return nullptr;
 }

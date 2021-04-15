@@ -25,6 +25,7 @@ enum class CommandType {
     Exit,
     Echo,
     Ls,
+    Cd,
 };
 
 class CommandGenerator {
