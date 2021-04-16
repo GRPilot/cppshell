@@ -6,14 +6,16 @@
 namespace security {
 
 User::User(const std::string &name, const std::string &permissions)
-    : name(name), perms(std::make_shared<Permissions>(permissions)) {}
+    : name(name), perms(std::make_unique<Permissions>(permissions)) {
+    assert(perms && "Cannot create user without permissions");
+}
 
 std::string_view User::username() const {
     return name;
 }
 
-std::shared_ptr<Permissions> User::permissions() const {
-    return perms;
+const Permissions &User::permissions() const {
+    return *perms;
 }
 
 bool User::operator==(const std::string &name) const {

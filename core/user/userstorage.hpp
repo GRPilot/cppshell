@@ -9,8 +9,8 @@ using UserPtr = std::shared_ptr<User>;
 class UserStorage : public singleton<UserStorage> {
     friend class singleton<UserStorage>;
 
-    static const char * storageFilename;
-    static const size_t UserStorage::BLOCK_COUNT;
+    const char *storageFilename = ".storage";
+    const size_t BLOCK_COUNT = 3;
 
     UserStorage();
     ~UserStorage();

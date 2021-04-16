@@ -39,7 +39,7 @@ private:
 
 namespace std {
     string to_string(const security::Permissions &permissions);
-    ostream &operator<<(ostream &out, const security::Permissions &permissions);
 } // namespace std
+std::ostream &operator<<(std::ostream &out, const security::Permissions &permissions);
 
 #endif // __PERMISSIONS_H__

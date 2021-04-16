@@ -3,11 +3,9 @@
 
 #include "userstorage.hpp"
 #include "user.hpp"
+#include "permissions.hpp"
 
 namespace security {
-
-const char *UserStorage::storageFilename = ".storage";
-const size_t UserStorage::BLOCK_COUNT = 3;
 
 UserStorage::UserStorage() {
     loadUserStorage();
