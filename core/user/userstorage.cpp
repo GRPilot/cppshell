@@ -80,9 +80,6 @@ bool UserStorage::changePassword(UserPtr user, const std::string &password) {
 
 void UserStorage::loadUserStorage() {
     users.clear();
-    users.emplace_back(
-        std::make_shared<User>("admin", "rwx"), false, "admin"
-    );
     std::ifstream fileStorage(storageFilename);
     if(!fileStorage.good()) {
         return;
