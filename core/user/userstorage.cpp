@@ -40,6 +40,20 @@ UserPtr UserStorage::authorize(const std::string &username, const std::string &p
     return nullptr;
 }
 
+bool UserStorage::signIn(const std::string &username, const std::string &password) {
+    auto found = std::find(users.begin(), users.end(), username);
+    if(found != users.end()) {
+        return false;
+    }
+
+    /// @todo: hash password
+    users.emplace_back(
+        std::make_shared<User>(username, "---"), false, password
+    );
+    updateUserStorage();
+    return true;
+}
+
 bool UserStorage::logOut(UserPtr user) {
     auto found = std::find(users.begin(), users.end(), user);
     if(found != users.end() && found->authorized) {

@@ -17,6 +17,7 @@ class UserStorage : public singleton<UserStorage> {
 public:
 
     UserPtr authorize(const std::string &username, const std::string &password);
+    bool signIn(const std::string &username, const std::string &password);
     bool logOut(UserPtr user);
 
     bool rename(UserPtr user, const std::string &newName);
