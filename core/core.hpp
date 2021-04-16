@@ -9,13 +9,15 @@ std::vector<std::string> split(const std::string &str, char sep);
 
 template<class T>
 class singleton {
-    explicit singleton() {}
-    virtual ~singleton() {}
 public:
     static T &instance() {
         static T single;
         return single;
     }
+
+protected:
+    explicit singleton() {}
+    virtual ~singleton() {}
 };
 
 #endif // __CORE_H__
