@@ -6,9 +6,10 @@
 #include <vector>
 #include <memory>
 #include <bitset>
+#include <cassert>
 #include <sstream>
 #include <fstream>
-#include <memory>
+#include <iterator>
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
