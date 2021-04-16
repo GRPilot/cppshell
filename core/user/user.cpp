@@ -5,7 +5,8 @@
 
 namespace security {
 
-User::User(const std::string &name) : name(name) {}
+User::User(const std::string &name, const std::string &permissions)
+    : name(name), perms(std::make_shared<Permissions>(permissions)) {}
 
 std::string_view User::username() const {
     return name;
@@ -13,6 +14,10 @@ std::string_view User::username() const {
 
 std::shared_ptr<Permissions> User::permissions() const {
     return perms;
+}
+
+bool User::operator==(const std::string &name) const {
+    return this->name == name;
 }
 
 } // namespace security

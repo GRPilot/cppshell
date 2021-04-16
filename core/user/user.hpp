@@ -8,10 +8,12 @@ class Permissions;
 class User {
     friend class UserStorage;
 public:
-    explicit User(const std::string &name);
+    explicit User(const std::string &name, const std::string &permissions);
 
     std::string_view username() const;
     std::shared_ptr<Permissions> permissions() const;
+
+    bool operator==(const std::string &name) const;
 private:
     std::string name;
     std::shared_ptr<Permissions> perms;
