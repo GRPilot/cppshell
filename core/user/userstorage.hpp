@@ -11,6 +11,9 @@ class UserStorage : public singleton<UserStorage> {
 
     static const char * storageFilename;
     static const size_t UserStorage::BLOCK_COUNT;
+
+    UserStorage();
+    ~UserStorage();
 public:
 
     UserPtr authorize(const std::string &username, const std::string &password);

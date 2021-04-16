@@ -9,6 +9,13 @@ namespace security {
 const char *UserStorage::storageFilename = ".storage";
 const size_t UserStorage::BLOCK_COUNT = 3;
 
+UserStorage::UserStorage() {
+    loadUserStorage();
+}
+
+UserStorage::~UserStorage() {
+    updateUserStorage();
+}
 
 UserStorage::StoredUser::StoredUser(UserPtr user, AuthorizedFlag authorized, const std::string &hash)
     : user(user), authorized(authorized), hash(hash) {
