@@ -18,6 +18,8 @@ include_directories(
 set(sources
     ${root}/core/core.cpp
     ${root}/core/security/permissions.cpp
+    ${root}/core/user/user.cpp
+    ${root}/core/user/userstorage.cpp
     ${root}/core/shell/shell.cpp
     ${root}/core/shell/shellcmd.cpp
     ${root}/core/shell/cmdgen.cpp
@@ -26,6 +28,8 @@ set(sources
 set(headers
     ${root}/core/core.hpp
     ${root}/core/security/permissions.hpp
+    ${root}/core/user/user.hpp
+    ${root}/core/user/userstorage.hpp
     ${root}/core/shell/shell.hpp
     ${root}/core/shell/shellcmd.hpp
     ${root}/core/shell/cmdgen.hpp

@@ -3,6 +3,9 @@
 #include "shell.hpp"
 #include "cmdgen.hpp"
 #include "shellcmd.hpp"
+#include "userstorage.hpp"
+#include "user.hpp"
+#include "permissions.hpp"
 
 int main() {
     env::Shell shell;

@@ -3,6 +3,16 @@
 #include "permissions.hpp"
 
 namespace security {
+    
+Permissions::Permissions(const std::string &strperms) {
+    if(strperms.size() < 3) {
+        return;
+    }
+
+    perms[p_read_position] = ('r' == strperms[p_read_position]);
+    perms[p_write_position] = ('w' == strperms[p_write_position]);
+    perms[p_execute_position] = ('e' == strperms[p_execute_position]);
+}
 
 bool Permissions::read() const {
     return perms[p_read_position];
@@ -29,7 +39,7 @@ void Permissions::execute(bool allow) {
 }
 
 Permissions::operator std::string() const {
-    std::string strperms('-', 3);
+    std::string strperms(3, '-');
     if(read()) {
         strperms[0] = 'r';
     }
@@ -50,8 +60,9 @@ string to_string(const security::Permissions &permissions) {
     return std::string(permissions);
 }
 
-ostream &operator<<(ostream &out, const security::Permissions &permissions) {
+} // namespace std
+
+std::ostream &operator<<(std::ostream &out, const security::Permissions &permissions) {
     return (out << std::string(permissions));
 }
 
-} // namespace std
