@@ -3,6 +3,16 @@
 #include "permissions.hpp"
 
 namespace security {
+    
+Permissions::Permissions(const std::string &strperms) {
+    if(strperms.size() < 3) {
+        return;
+    }
+
+    perms[p_read_position] = ('r' == strperms[p_read_position]);
+    perms[p_write_position] = ('w' == strperms[p_write_position]);
+    perms[p_execute_position] = ('e' == strperms[p_execute_position]);
+}
 
 bool Permissions::read() const {
     return perms[p_read_position];

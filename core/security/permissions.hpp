@@ -18,6 +18,9 @@ public:
         p_execute = (1 << p_execute_position),
     };
 
+    Permissions() = default;
+    explicit Permissions(const std::string &strperms);
+
     bool read() const;
     bool write() const;
     bool execute() const;
