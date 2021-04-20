@@ -5,6 +5,8 @@ namespace core {
 
 std::vector<std::string> split(const std::string &str, char sep);
 
+using byte_t = unsigned char;
+
 } // namespace core
 
 template<class T>

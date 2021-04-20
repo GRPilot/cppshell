@@ -10,6 +10,7 @@ set(root ${PROJECT_SOURCE_DIR})
 include_directories(
     ${root}/core
     ${root}/core/security
+    ${root}/core/security/chipermethods
     ${root}/core/shell
     ${root}/core/user
     ${root}
@@ -18,6 +19,9 @@ include_directories(
 set(sources
     ${root}/core/core.cpp
     ${root}/core/security/permissions.cpp
+    ${root}/core/security/chiper.cpp
+    ${root}/core/security/chipermethods/magiccube.cpp
+    ${root}/core/security/chipermethods/sha256.cpp
     ${root}/core/user/user.cpp
     ${root}/core/user/userstorage.cpp
     ${root}/core/shell/shell.cpp
@@ -28,6 +32,9 @@ set(sources
 set(headers
     ${root}/core/core.hpp
     ${root}/core/security/permissions.hpp
+    ${root}/core/security/chiper.hpp
+    ${root}/core/security/chipermethods/magiccube.hpp
+    ${root}/core/security/chipermethods/sha256.hpp
     ${root}/core/user/user.hpp
     ${root}/core/user/userstorage.hpp
     ${root}/core/shell/shell.hpp
