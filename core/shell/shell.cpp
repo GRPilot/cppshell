@@ -14,25 +14,26 @@ void Shell::addCommand(const CommandPtr &cmd) {
 
 int Shell::start() const {
     std::string cmd;
+    int rc = 0;
     do {
         std::cout << "username >> ";
         std::getline(std::cin, cmd, '\n');
-        if(cmd.find("exit") != std::string::npos) {
-            return 0;
-        }
 
         CommandPtr found = find_cmd(cmd);
         if(nullptr == found) {
-            print("SHELL: Command '" + cmd + "' not found");
+            print("Command '" + cmd + "' not found");
             continue;
         }
-
-        found->execute();
+        found->setArgs(cmd);
+        rc = found->execute();
+        if(0 != rc) {
+            printErr(found->info().name, rc);
+        }
     } while(true);
 }
 
-void Shell::print(const std::string &str) const {
-    std::cout << str << std::endl;
+void Shell::print(const std::string &str, bool printShell) const {
+    std::cout << (printShell ? "[Shell] " : "") << str << std::endl;
 }
 
 const std::vector<CommandPtr> &Shell::getCommands() const {
@@ -46,6 +47,10 @@ CommandPtr Shell::find_cmd(const std::string &cmd) const {
         }
     }
     return nullptr;
+}
+
+void Shell::printErr(const std::string &cmdname, int rc) const {
+    print("Error: command '" + cmdname + "' return " + std::to_string(rc));
 }
 
 } // namespace env
