@@ -9,14 +9,15 @@ using UserPtr = std::shared_ptr<User>;
 class UserStorage : public singleton<UserStorage> {
     friend class singleton<UserStorage>;
 
-    const char *storageFilename = ".storage";
-    const size_t BLOCK_COUNT = 3;
+    static constexpr char *storageFilename = ".storage";
+    static constexpr size_t BLOCK_COUNT = 3;
+    static constexpr size_t MIN_PASSWORD_LEN = 4;
 
     UserStorage();
     ~UserStorage();
 public:
 
-    UserPtr authorize(const std::string &username, const std::string &password);
+    UserPtr authorize(const std::string &username, const std::string &password) const;
     bool signIn(const std::string &username, const std::string &password);
     bool logOut(UserPtr user);
 

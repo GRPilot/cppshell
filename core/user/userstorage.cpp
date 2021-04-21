@@ -4,6 +4,7 @@
 #include "userstorage.hpp"
 #include "user.hpp"
 #include "permissions.hpp"
+#include "chiper.hpp"
 
 namespace security {
 
@@ -28,27 +29,40 @@ bool UserStorage::StoredUser::operator==(const UserPtr &name) const {
     return user.get() == name.get();
 }
 
-UserPtr UserStorage::authorize(const std::string &username, const std::string &password) {
+UserPtr UserStorage::authorize(const std::string &username, const std::string &password) const {
+    if(password.size() < MIN_PASSWORD_LEN) {
+        return nullptr;
+    }
+
     auto found = std::find(users.begin(), users.end(), username);
     if(found == users.end() || found->authorized) {
         return nullptr;
     }
-    /// @todo: hash password
-    if(found->hash == password) {
+
+    Chiper chiper(Chiper::Method::SHA256);
+    ChiperData passwordHash = chiper.encrypt(ChiperData(password.begin(), password.end()));
+    if(found->hash == std::to_string(passwordHash)) {
         return found->user;
     }
     return nullptr;
 }
 
 bool UserStorage::signIn(const std::string &username, const std::string &password) {
+    if(password.size() < MIN_PASSWORD_LEN) {
+        return false;
+    }
+
     auto found = std::find(users.begin(), users.end(), username);
     if(found != users.end()) {
         return false;
     }
 
-    /// @todo: hash password
+    Chiper chiper(Chiper::Method::SHA256);
+    ChiperData passwordHash = chiper.encrypt(ChiperData(password.begin(), password.end()));
     users.emplace_back(
-        std::make_shared<User>(username, "---"), false, password
+        std::make_shared<User>(username, "---"),
+        false,
+        std::to_string(passwordHash)
     );
     updateUserStorage();
     return true;
@@ -80,12 +94,17 @@ bool UserStorage::rename(UserPtr user, const std::string &newName) {
 }
 
 bool UserStorage::changePassword(UserPtr user, const std::string &password) {
+    if(password.size() < MIN_PASSWORD_LEN) {
+        return false;
+    }
+
     auto found = std::find(users.begin(), users.end(), user);
     if(found == users.end() || !found->authorized) {
         return false;
     }
-    /// @todo: hash password
-    found->hash = password;
+    Chiper chiper(Chiper::Method::SHA256);
+    ChiperData passwordHash = chiper.encrypt(ChiperData(password.begin(), password.end()));
+    found->hash = std::to_string(passwordHash);
     updateUserStorage();
     return true;
 }
@@ -103,10 +122,6 @@ void UserStorage::loadUserStorage() {
         if(splitted.size() < BLOCK_COUNT) {
             continue;
         }
-        std::cout << "Load user: " << std::endl;
-        std::cout << "    Username: " << splitted[0] << std::endl;
-        std::cout << "    Permissions: " << splitted[1] << std::endl;
-        std::cout << "    hash: " << splitted[2] << std::endl;
         /**
          * splitted[0] -> username
          * splitted[1] -> permissions
@@ -119,7 +134,6 @@ void UserStorage::loadUserStorage() {
 }
 
 void UserStorage::updateUserStorage() const {
-    std::ofstream storage(storageFilename);
     auto make_record = [](const StoredUser &sUser) {
         std::stringstream out;
         out << sUser.user->username() << ";"
@@ -128,10 +142,9 @@ void UserStorage::updateUserStorage() const {
         return out.str();
     };
 
+    std::ofstream storage(storageFilename);
     for(const auto &stored : users) {
-        std::string debug = make_record(stored);
-        std::cout << "Add record: [" << debug << "]\n";
-        storage << debug << std::endl;
+        storage << make_record(stored) << std::endl;
     }
 }
 
