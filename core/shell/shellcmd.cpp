@@ -12,6 +12,8 @@ Command::Command(const std::string &name,
     : information{name, shortcut, description}, holder(holder) {
 }
 
+Command::~Command() {}
+
 bool Command::operator==(const std::string &other) {
     if(other.empty()) {
         return false;

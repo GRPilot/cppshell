@@ -17,6 +17,7 @@ public:
                      const std::string &shortcut,
                      const std::string &description,
                      Shell &holder);
+    virtual ~Command();
 
     virtual bool operator==(const std::string &other);
 
